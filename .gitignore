@@ -1,0 +1,12 @@
+# Dependency directories (this fixes your large file & npm token errors)
+node_modules/
+jspm_packages/
+
+# Environment variables (hides secrets)
+.env
+.env.local
+.env.development.local
+
+# Operating system files
+.DS_Store
+Thumbs.db

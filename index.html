@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Downloader</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="herotext">
+        <h1>Video Downloader</h1>
+    </div>  
+    <br>
+    <div class="form">
+    <label class="Inputlabel">
+        Enter A URL Of a video to Download
+    </label><br>
+
+    <script>
+            
+    async function sendUrlToServer() {
+        const urlValue = document.getElementById('videoUrl').value;
+        const statusText = document.getElementById('status');
+        
+        if(!urlValue) return alert('Enter a URL!');
+        statusText.innerText = "Processing video on backend server... please wait.";
+
+        try {
+            // Talk to the backend server running on port 3005
+            const response = await fetch('http://localhost:3005/api/download', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ videoUrl: urlValue })
+            });
+
+            if(!response.ok) throw new Error("Server error occurred.");
+
+            // Convert raw binary back into a local download link in browser
+            const blob = await response.blob();
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = "video.mp4";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            statusText.innerText = "Downloaded successfully!";
+        } catch (err) {
+            statusText.innerText = "Error: Could not process request.";
+        }
+    }
+    </script>
+    
+   
+   
+    <input type="text" name="URL" placeholder="Video Url" id="videoUrl"> <br>
+    
+    <div class="form-btn">
+        
+      
+        
+       
+    <button onclick="sendUrlToServer()">Download</button>
+
+    <p id="status"></p>
+    </div>
+    </div>
+     
+</body>
+</html>
